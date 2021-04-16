@@ -1,47 +1,26 @@
-# ------------------------------------------------------------------------------
-# Cargo Build Stage
-# ------------------------------------------------------------------------------
+# 1: Build the binary
+FROM rust:1.42 as builder
+WORKDIR /usr/src
 
-FROM rust:latest as cargo-build
+# 1a: Prepare for static linking
+RUN apt-get update && \
+    apt-get dist-upgrade -y && \
+    apt-get install -y musl-tools && \
+    rustup target add x86_64-unknown-linux-musl
 
-RUN apt-get update
+# 1b: Download and compile Rust dependencies (and store as a separate Docker layer)
+RUN USER=root cargo new myprogram
+WORKDIR /usr/src/myprogram
+COPY Cargo.toml Cargo.lock ./
+RUN cargo install --target x86_64-unknown-linux-musl --path .
 
-RUN apt-get install musl-tools -y
+# 1c: Build the binary using the actual source code
+COPY src ./src
+RUN cargo install --target x86_64-unknown-linux-musl --path .
 
-RUN rustup target add x86_64-unknown-linux-musl
-
-WORKDIR /usr/src/myapp
-
-COPY Cargo.toml Cargo.toml
-
-RUN mkdir src/
-
-RUN echo "fn main() {println!(\"if you see this, the build broke\")}" > src/main.rs
-
-RUN RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl
-
-RUN rm -f target/x86_64-unknown-linux-musl/release/deps/myapp*
-
-COPY . .
-
-RUN RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl
-
-# ------------------------------------------------------------------------------
-# Final Stage
-# ------------------------------------------------------------------------------
-
-FROM alpine:latest
-
-RUN addgroup -g 1000 myapp
-
-RUN adduser -D -s /bin/sh -u 1000 -G myapp myapp
-
-WORKDIR /home/myapp/bin/
-
-COPY --from=cargo-build /usr/src/myapp/target/x86_64-unknown-linux-musl/release/myapp .
-
-RUN chown myapp:myapp myapp
-
-USER myapp
-
-CMD ["./myapp"]
+# 2: Copy the binary and extra files ("static") to an empty Docker image
+FROM scratch
+COPY --from=builder /usr/local/cargo/bin/myprogram .
+COPY static .
+USER 1000
+CMD ["./myprogram"]
