@@ -24,6 +24,7 @@ steps:
     type: build
     image_name: codefresh
     dockerfile: sample-app/codefresh.Dockerfile
+    working_directory: /usr/app
     tag: 1.0.1
     registry: dockerhub
 
