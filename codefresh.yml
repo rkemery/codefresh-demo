@@ -9,7 +9,7 @@ stages:
   - "test"
 
 steps:
-  codefresh_demo_main_clone:
+  main_clone:
     title: "codefresh_demo_main_clone"
     type: "git-clone"
     repo: "rkemery/codefresh-demo"
