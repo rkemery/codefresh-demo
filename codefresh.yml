@@ -26,3 +26,20 @@ steps:
     image: '${{build_demo_app}}'
     commands:
       - netstat -an
+  integration_test:
+    type: composition
+    title: "Launching Demo Rust App"
+    description: "Temporary Test Environment"
+    composition:
+      version: '3'
+      services:
+        app:
+          image: ${{build_demo_app}}
+          ports:
+           - 8000
+    composition_candidates:
+      test_service: 
+        image: ${{build_demo_app}}
+        links:
+          - app
+        command: 'netstat -an'
