@@ -23,13 +23,13 @@ steps:
     build_arguments:
       - NODE_VERSION=12
       - APP_DIR=/usr/src/app
-  unit_test:
-    title: "Unit Test - npm run test"
+  unit_test_example:
+    title: "Unit Test - npm test"
     image: '${{build_my_demo_app}}'
     commands:
-      - npm run test
+      - npm test
     stage: test
-  freestyle_test:
+  simple_test:
     title: "Test - ls working directory"
     type: "freestyle" 
     image: "alpine:latest" 
