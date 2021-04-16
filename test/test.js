@@ -6,7 +6,7 @@ var app = require('../app'),
     mongoUrl = util.format('mongodb://mongo:%s/demo', process.env.MONGO_PORT);
 
 before(function(done) {
-  MongoClient.connect(mongoUrl, function (err, db) {
+  MongoClient.connect(mongoUrl, {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true}, function (err, db) {
     if (err) return done(err);
 
     console.log('connected to mongo');
