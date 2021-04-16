@@ -38,4 +38,7 @@ steps:
         image: ${{build_my_demo_app}}
         links:
           - codefresh_demo
-        command: npm run test
+        services:
+          - codefresh_demo
+        commands: 
+          - npm run test
