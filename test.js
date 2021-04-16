@@ -1,10 +1,9 @@
-const request = require("supertest")("http://localhost:3000");
-const expect = require("chai").expect;
+var expect  = require('chai').expect;
+var request = require('request');
 
-describe("GET /", function () {
-  it("returns status OK", async function () {
-    const response = await request.get("/");
-
-    expect(response.status).to.eql("Hello World!");
-  });
+it('Main page content', function(done) {
+    request('http://localhost:3000' , function(error, response, body) {
+        expect(body).to.equal('Hello World');
+        done();
+    });
 });

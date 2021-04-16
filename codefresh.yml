@@ -34,8 +34,9 @@ steps:
           ports: 
             - 3000
     composition_candidates:
-      my_test_service:
+      codefresh_demo_test:
         image: ${{build_my_demo_app}}
         links:
           - codefresh_demo
-        command: 'npm run test'
+        commands: 
+          - npm run test
