@@ -12,8 +12,8 @@ steps:
     revision: "${{CF_BRANCH}}"
     git: "github"
     stage: "clone"
-  build_my_app:
-    title: "Building Node.Js Docker Image"
+  build_my_demo_app:
+    title: "Building Node.Js Docker Image for Demo App"
     type: build
     image_name: rkemery/codefresh-demo
     dockerfile: Dockerfile
@@ -23,8 +23,14 @@ steps:
     build_arguments:
       - NODE_VERSION=12
       - APP_DIR=/usr/src/app
-  test:
-    title: "Test"
+  unit_test:
+    title: "Unit Test - npm run test"
+    image: '${{build_my_demo_app}}'
+    commands:
+      - npm run test
+    stage: test
+  freestyle_test:
+    title: "Test - ls working directory"
     type: "freestyle" 
     image: "alpine:latest" 
     working_directory: "." 
