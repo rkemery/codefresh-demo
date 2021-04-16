@@ -19,14 +19,17 @@ steps:
     git: "github"
     stage: "clone"
     
-  codefresh_demo_build_app:
+  build_my_app:
     title: "codefresh_demo_build_app"
     type: build
     image_name: rkemery/codefresh-demo
     dockerfile: sample-app/codefresh.Dockerfile
-    working_directory: 'sample-app/'
-    tag: test
+    working_directory: '.'
+    tag: 'test'
     registry: dockerhub
+    build_arguments:
+      - NODE_VERSION=12
+      - APP_DIR=/usr/src/app
 
   codefresh_demo_test:
     title: "codefresh_demo_test"

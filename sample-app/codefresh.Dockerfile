@@ -1,11 +1,14 @@
-FROM node:12
+ARG NODE_VERSION
+FROM node:$NODE_VERSION
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+ARG APP_DIR
 
-COPY package.json /usr/src/app/
+RUN mkdir -p $APP_DIR
+WORKDIR $APP_DIR
+
+COPY package.json .
 RUN npm install --silent
-COPY . /usr/src/app
+COPY . .
 EXPOSE 3000
 
 ENV PORT 3000
