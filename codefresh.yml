@@ -31,6 +31,8 @@ steps:
       services:
         codefresh_demo:
           image: ${{build_my_demo_app}}
+          ports: 
+            - 3000
     composition_candidates:
       test:
         image: ${{build_my_demo_app}}

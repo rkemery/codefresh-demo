@@ -5,6 +5,6 @@ describe("GET /", function () {
   it("returns status OK", async function () {
     const response = await request.get("/");
 
-    expect(response.status).to.eql(200);
+    expect(response.status).to.eql("Hello World!");
   });
 });
