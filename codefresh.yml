@@ -24,8 +24,8 @@ steps:
     type: build
     image_name: rkemery/codefresh-demo
     dockerfile: sample-app/codefresh.Dockerfile
-    working_directory: '.'
-    tag: 1.0.1
+    working_directory: 'sample-app/'
+    tag: test
     registry: dockerhub
 
   codefresh_demo_test:
