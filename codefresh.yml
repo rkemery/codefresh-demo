@@ -27,7 +27,7 @@ steps:
     stage: test
     image: '${{build_demo_app}}'
     commands:
-      - ./rust-docker-web
+      - ls -al
       - netstat -an
   integration_test:
     type: composition
