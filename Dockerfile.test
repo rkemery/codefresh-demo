@@ -35,6 +35,6 @@ RUN chown -R $APP_USER:$APP_USER ${APP}
 USER $APP_USER
 WORKDIR ${APP}
 
-ADD start.sh /
+ADD start.sh /tmp
 
-CMD ["/start.sh"]
+CMD ["./tmp/start.sh"]
