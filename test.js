@@ -1,4 +1,4 @@
-const request = require("supertest")("http://127.0.0.1:3000");
+const request = require("supertest")("http://localhost:3000");
 const expect = require("chai").expect;
 
 describe("GET /", function () {
