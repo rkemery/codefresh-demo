@@ -40,7 +40,8 @@ steps:
       registry: dockerhub   
     hooks:
       on_finish:
-        exec:
-          image: tutum/curl
-          commands:
-            - curl -X POST --data-urlencode 'payload={"text":"Test slack integration via yaml"}' "${{SLACK_WEB_URL}}"
+        sendSlack:
+          type: slack-message-sender
+          arguments:
+            WEBHOOK_URL: "${{SLACK_WEB_URL}}"
+            MESSAGE: "${{SLACK_MESSAGE}}"
