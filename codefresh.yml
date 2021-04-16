@@ -27,7 +27,7 @@ steps:
     title: "Test"
     type: "freestyle" 
     image: "alpine:latest" 
-    working_directory: "${{clone}}" 
+    working_directory: "." 
     commands:
       - "ls"
     stage: "test"
