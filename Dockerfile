@@ -9,7 +9,7 @@ WORKDIR $APP_DIR
 
 COPY package.json .
 RUN npm install --silent
-RUN npm install mocha --save-dev
+RUN npm install --save-dev mocha
 COPY . .
 EXPOSE 3000
 

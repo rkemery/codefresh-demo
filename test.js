@@ -1,11 +1,12 @@
-res = {
-    send: function(){ },
-    json: function(err){
-        console.log("\n : " + err);
-    },
-    status: function(responseStatus) {
-        assert.equal(responseStatus, 404);
-        // This next line makes it chainable
-        return this; 
-    }
-}
+request = require("request");
+should = require("should");
+
+describe('Applications API', function() {
+  it('Checks existence of test application', function(done) {
+    request.get('http://127.0.0.1:3000', function(err, response, body) {
+      response.statusCode.should.equal(200);
+      body.should.include("Hello World");
+      done();
+    })
+  });
+});
