@@ -23,7 +23,7 @@ steps:
     build_arguments:
       - NODE_VERSION=12
       - APP_DIR=/usr/src/app
- my_tests:
+  my_tests:
     image: ${{build_my_demo_app}}
     title: "Integration tests"
     commands:
