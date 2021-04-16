@@ -36,4 +36,4 @@ steps:
         image: ${{build_demo_app}}
         links:
           - app
-        command: bash -c '/usr/bin/wait-for-it.sh -t 20 app:8000 -- curl http://localhost:8000/health'
+        command: bash -c 'curl http://localhost:8000/health'

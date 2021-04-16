@@ -25,7 +25,7 @@ RUN addgroup -S $APP_USER \
     && adduser -S -g $APP_USER $APP_USER
 
 RUN apk update \
-    && apk add --no-cache ca-certificates tzdata curl wait-for-it \
+    && apk add --no-cache ca-certificates tzdata curl \
     && rm -rf /var/cache/apk/*
 
 COPY --from=builder /home/rust/src/rust-docker-web/target/x86_64-unknown-linux-musl/release/rust-docker-web ${APP}/rust-docker-web
