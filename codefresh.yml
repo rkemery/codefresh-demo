@@ -17,7 +17,7 @@ steps:
     type: build
     image_name: rkemery/codefresh-demo
     dockerfile: sample-app/codefresh.Dockerfile
-    working_directory: '${{clone}}'
+    working_directory: '.'
     tag: 'master'
     registry: dockerhub
     build_arguments:
