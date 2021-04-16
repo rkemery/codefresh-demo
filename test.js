@@ -1,15 +1,3 @@
-var server = require('/usr/src/app');
-
-describe('server', function () {
-  before(function () {
-    server.listen(3000);
-  });
-
-  after(function () {
-    server.close();
-  });
-});
-
 var assert = require('assert'),
     http = require('http');
 
