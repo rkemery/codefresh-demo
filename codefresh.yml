@@ -1,8 +1,4 @@
-# More examples of Codefresh YAML can be found at
-# https://codefresh.io/docs/docs/yaml-examples/examples/
-
 version: "1.0"
-# Stages can help you organize your steps in stages
 stages:
   - "clone"
   - "build"
@@ -10,32 +6,28 @@ stages:
 
 steps:
   main_clone:
-    title: "codefresh_demo_main_clone"
+    title: "Cloning main repository..."
     type: "git-clone"
     repo: "rkemery/codefresh-demo"
-    # CF_BRANCH value is auto set when pipeline is triggered
-    # Learn more at codefresh.io/docs/docs/codefresh-yaml/variables/
     revision: "${{CF_BRANCH}}"
     git: "github"
     stage: "clone"
-    
   build_my_app:
-    title: "codefresh_demo_build_app"
+    title: "Building Node.Js Docker Image"
     type: build
     image_name: rkemery/codefresh-demo
     dockerfile: sample-app/codefresh.Dockerfile
-    working_directory: '.'
-    tag: 'test'
+    working_directory: '${{clone}}'
+    tag: ''
     registry: dockerhub
     build_arguments:
       - NODE_VERSION=12
       - APP_DIR=/usr/src/app
-
-  codefresh_demo_test:
-    title: "codefresh_demo_test"
-    type: "freestyle" # Run any command
-    image: "alpine:latest" # The image in which command will be executed
-    working_directory: "${{clone}}" # Running command where code cloned
+  test:
+    title: "Test"
+    type: "freestyle" 
+    image: "alpine:latest" 
+    working_directory: "${{clone}}" 
     commands:
       - "ls"
     stage: "test"
