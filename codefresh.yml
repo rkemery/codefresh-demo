@@ -36,4 +36,4 @@ steps:
         image: ${{build_demo_app}}
         links:
           - app
-        command: bash -c 'curl http://localhost:8000/health'
+        command: 'curl http://localhost:8000/health'
