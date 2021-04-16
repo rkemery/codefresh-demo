@@ -12,6 +12,7 @@
       "mocha": "*",
       "chai": "*",
       "chai-http": "*",
-      "supertest": "*"
+      "supertest": "*",
+      "request": "*"
     }
 }
