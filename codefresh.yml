@@ -23,7 +23,7 @@ steps:
     build_arguments:
       - NODE_VERSION=12
       - APP_DIR=/usr/src/app
-  unit_test:
+  my_test:
     type: composition
     working_directory: ${{build_my_demo_app}}
     composition:
@@ -31,12 +31,6 @@ steps:
       services:
         codefresh_demo:
           image: ${{build_my_demo_app}}
+          command: 'npm run test'
           ports: 
             - 3000
-    composition_candidates:
-      test:
-        image: ${{build_my_demo_app}}
-        links:
-          - codefresh_demo
-        commands:
-          - npm run test
