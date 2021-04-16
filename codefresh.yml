@@ -38,9 +38,9 @@ steps:
       # The registry that the user's Kubernetes cluster can pull the image from
       # Codefresh will generate (if not found) secret and add it to the deployment so the Kubernetes master can pull it
       registry: dockerhub   
-      hooks:
-        on_finish:
-          exec:
-            image: tutum/curl
-            commands:
-              - curl -X POST --data-urlencode 'payload={"text":"Test slack integration via yaml"}' "${{SLACK_WEB_URL}}"
+    hooks:
+      on_finish:
+        exec:
+          image: tutum/curl
+          commands:
+            - curl -X POST --data-urlencode 'payload={"text":"Test slack integration via yaml"}' "${{SLACK_WEB_URL}}"
