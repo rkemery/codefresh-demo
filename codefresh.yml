@@ -18,3 +18,12 @@ steps:
     working_directory: '.'
     tag: 'test'
     registry: dockerhub
+  test:
+    title: "Running tests"
+    type: "freestyle" 
+    image: '${{build_demo_app}}'
+    environment:
+      - CARGO_HOME=/codefresh/volume/cargo    
+    commands:
+      - "cargo test"
+    stage: "test"
