@@ -1,24 +1,39 @@
-# -----------------
-# Cargo Build Stage
-# -----------------
+FROM ekidd/rust-musl-builder:stable as builder
 
-FROM rust:1.39 as cargo-build
-
-WORKDIR /usr/src/app
-COPY Cargo.toml .
-RUN mkdir .cargo
-RUN cargo vendor > .cargo/config
-
-COPY ./src src
+RUN USER=root cargo new --bin rust-docker-web
+WORKDIR ./rust-docker-web
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
 RUN cargo build --release
-RUN cargo install --path . --verbose
+RUN rm src/*.rs
 
-# -----------------
-# Final Stage
-# -----------------
+ADD . ./
 
-FROM debian:stable-slim
+RUN rm ./target/x86_64-unknown-linux-musl/release/deps/rust_docker_web*
+RUN cargo build --release
 
-COPY --from=cargo-build /usr/local/cargo/bin/my_binary /bin
 
-CMD ["my_binary"]
+FROM alpine:latest
+
+ARG APP=/usr/src/app
+
+EXPOSE 8000
+
+ENV TZ=Etc/UTC \
+    APP_USER=appuser
+
+RUN addgroup -S $APP_USER \
+    && adduser -S -g $APP_USER $APP_USER
+
+RUN apk update \
+    && apk add --no-cache ca-certificates tzdata \
+    && rm -rf /var/cache/apk/*
+
+COPY --from=builder /home/rust/src/rust-docker-web/target/x86_64-unknown-linux-musl/release/rust-docker-web ${APP}/rust-docker-web
+
+RUN chown -R $APP_USER:$APP_USER ${APP}
+
+USER $APP_USER
+WORKDIR ${APP}
+
+CMD ["./rust-docker-web"]
