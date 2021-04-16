@@ -36,7 +36,7 @@ steps:
     title: "Unit Test - Demo Rust App"
     stage: test
     image: "${{build_demo_app_test}}"
-    command: 'cat /tmp/result.txt'
+    command: 'ls -l'
   integration_test:
     type: composition
     stage: test
