@@ -9,7 +9,6 @@ WORKDIR $APP_DIR
 
 COPY package.json .
 RUN npm install --silent
-RUN npm install --global mocha
 COPY . .
 EXPOSE 3000
 
