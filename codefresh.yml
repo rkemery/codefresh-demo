@@ -7,11 +7,11 @@ stages:
 steps:
   main_clone:
     title: "Cloning main repository..."
+    stage: clone
     type: "git-clone"
     repo: "rkemery/codefresh-demo"
     revision: "${{CF_BRANCH}}"
     git: "github"
-    stage: "clone"
   build_my_demo_app:
     title: "Building Node.Js Docker Image for Demo App"
     type: build
@@ -23,14 +23,9 @@ steps:
     build_arguments:
       - NODE_VERSION=12
       - APP_DIR=/usr/src/app
-  my_tests:
-    image: ${{build_my_demo_app}}
-    title: "Integration tests"
+  run_integration_tests:
+    title: "Running integration tests"
+    stage: test
+    image: '${{build_my_demo_app}}'
     commands:
-      - 'npm run test'
-    services:
-      composition:
-        codefresh_demo_app:
-          image: ${{build_my_demo_app}}
-          ports:
-            - 3000
+      - npm test run
