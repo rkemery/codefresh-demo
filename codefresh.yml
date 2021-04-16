@@ -22,7 +22,7 @@ steps:
   test:
     title: "Running tests"
     type: "freestyle" 
-    image: rkemery/codefresh-demo
+    image: '${{build_demo_app}}'
     commands:
-      - "cargo test"
+      - "ls -l"
     stage: "test"
