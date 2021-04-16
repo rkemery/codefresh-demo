@@ -1,4 +1,10 @@
 version: "1.0"
+hooks: 
+ on_finish:
+   exec:
+     image: tutum/curl
+     commands:
+       - curl -X POST --data-urlencode 'payload={"text":"Code Fresh Demo App Deployment to k8s Successful"}' ${{SLACK_WEB_URL}}
 stages:
   - "checkout"
   - "package"
@@ -30,6 +36,7 @@ steps:
       - netstat -an
   integration_test:
     type: composition
+    stage: test
     title: "Integration Test - Demo Rust App"
     description: "Temporary Test Environment"
     composition:
