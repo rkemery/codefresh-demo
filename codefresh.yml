@@ -30,7 +30,7 @@ steps:
         app:
           image: ${{build_demo_app}}
           ports:
-           - 8000:8000
+           - 8000
     composition_candidates:
       test_service: 
         image: ${{build_demo_app}}
