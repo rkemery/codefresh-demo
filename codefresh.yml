@@ -23,10 +23,11 @@ steps:
     tag: 'test'
     registry: dockerhub
   unit_test:
-    title: "Running Unit Test"
+    title: "Unit Test - Demo Rust App"
     stage: test
     image: '${{build_demo_app}}'
     commands:
+      - ./rust-docker-web
       - netstat -an
   integration_test:
     type: composition
