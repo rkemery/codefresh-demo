@@ -11,6 +11,7 @@
       "express": "3.x",
       "mocha": "*",
       "chai": "*",
-      "chai-http": "*"
+      "chai-http": "*",
+      "supertest": "*"
     }
 }
