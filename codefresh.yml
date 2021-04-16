@@ -15,7 +15,7 @@ steps:
     title: "Building Demo App"
     type: build
     image_name: rkemery/codefresh-demo
-    no_cache: true
+    no_cache: false
     dockerfile: Dockerfile
     working_directory: '.'
     tag: 'test'
@@ -25,5 +25,5 @@ steps:
     type: "freestyle" 
     image: "rkemery/codefresh-demo:test"
     commands:
-      - "ls -l"
+      - "curl http://localhost:8000/health"
     stage: "test"
