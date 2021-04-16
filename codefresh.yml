@@ -23,17 +23,17 @@ steps:
     build_arguments:
       - NODE_VERSION=12
       - APP_DIR=/usr/src/app
-  simple_ls_test:
-    title: "Test - ls working directory"
-    type: "freestyle" 
-    image: "${{build_my_demo_app}}" 
-    working_directory: "." 
-    commands:
-      - "ls"
-    stage: "test"
-  unit_test_example:
-    title: "Unit Test - npm test"
-    image: '${{build_my_demo_app}}'
-    commands:
-      - npm run test
-    stage: test
+  unit_test:
+    type: composition
+    working_directory: ${{build_my_demo_app}}
+    composition:
+      version: '2'
+      services:
+        codefresh_demo:
+          image: ${{build_my_demo_app}}
+    composition_candidates:
+      test:
+        image: ${{build_my_demo_app}}
+        links:
+          - codefresh_demo
+        command: npm run test
