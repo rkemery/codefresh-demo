@@ -5,14 +5,14 @@ stages:
   - "test"
 steps:
   main_clone:
-    title: "Cloning main repository..."
+    title: "Cloning Main Repository"
     stage: clone
     type: "git-clone"
     repo: "rkemery/codefresh-demo"
     revision: "${{CF_BRANCH}}"
     git: "github"
   build_demo_app:
-    title: "Building Demo App"
+    title: "Building Demo Rust App"
     type: build
     image_name: rkemery/codefresh-demo
     no_cache: false
@@ -21,7 +21,7 @@ steps:
     tag: 'test'
     registry: dockerhub
   test:
-    title: "Running tests"
+    title: "Running Test on App"
     type: "freestyle" 
     image: "rkemery/codefresh-demo:test"
     commands:
