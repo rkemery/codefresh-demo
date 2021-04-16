@@ -1,4 +1,4 @@
-var server = require('./');
+var server = require('../app');
 
 describe('server', function () {
   before(function () {
