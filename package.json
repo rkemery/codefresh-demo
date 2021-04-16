@@ -3,8 +3,8 @@
     "description": "Hello World test app",
     "version": "0.0.1",
     "scripts": {
-      "test": "mocha test.js",
       "start": "node app.js",
+      "test": "mocha test.js"
     },
     "private": true,
     "dependencies": {
