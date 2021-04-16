@@ -27,7 +27,7 @@ steps:
     title: "Unit Test - npm test"
     image: '${{build_my_demo_app}}'
     commands:
-      - npm test
+      - npm run test
     stage: test
   simple_test:
     title: "Test - ls working directory"
