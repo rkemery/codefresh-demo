@@ -1,7 +1,7 @@
 FROM node:12
 
 # Create app directory
-WORKDIR /usr/app
+# WORKDIR /usr/app
 
 COPY package.json ./
 
