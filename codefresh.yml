@@ -20,12 +20,12 @@ steps:
     no_cache: false
     dockerfile: Dockerfile
     working_directory: '.'
-    tag: 'test'
+    tag: "${{CF_BRANCH}}"
     registry: dockerhub
   unit_test:
     title: "Unit Test - Demo Rust App"
     stage: test
-    image: rkemery/codefresh-demo:test
+    image: "${{build_demo_app}}"
     commands:
       - ls -al
       - netstat -an
@@ -38,13 +38,13 @@ steps:
       version: '3'
       services:
         app:
-          image: rkemery/codefresh-demo:test
+          image: "${{build_demo_app}}"
           ports:
            - 8000
           command: 'netstat -an'
     composition_candidates:
       test_service: 
-        image: rkemery/codefresh-demo:test
+        image: "${{build_demo_app}}"
         links:
           - app
         command: 'netstat -an'
@@ -61,7 +61,7 @@ steps:
     candidate:
       # The image that will replace the original deployment image 
       # The image that been build using Build step
-      image: rkemery/codefresh-demo:test
+      image: rkemery/codefresh-demo:${{CF_BRANCH}}
       # The registry that the user's Kubernetes cluster can pull the image from
       # Codefresh will generate (if not found) secret and add it to the deployment so the Kubernetes master can pull it
       registry: dockerhub   
@@ -70,4 +70,4 @@ steps:
        exec:
          image: tutum/curl
          commands:
-           - curl -X POST --data-urlencode 'payload={"text":"Code Fresh Demo App Deployment to k8s Successful"}' ${{SLACK_WEB_URL}}
+           - curl -X POST --data-urlencode 'payload={"text":"Code Fresh Demo App Deployment to k8s Successful"}' '${{SLACK_WEB_URL}}'
