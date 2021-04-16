@@ -20,18 +20,20 @@ steps:
     working_directory: '.'
     tag: 'test'
     registry: dockerhub
-  test:
-    title: "Running Test on App"
-    type: "freestyle" 
-    image: "rkemery/codefresh-demo:test"
-    commands:
-      - "curl http://localhost:8000/health"
-    services:
-      composition:
-        rust_service:
-          image: 'rkemery/codefresh-demo:test'
+  integration_test:
+    type: "composition"
+    title: "Launching Rust App"
+    description: "Temporary Test Environment"
+    composition:
+      version: '3'
+      services:
+        app:
+          image: ${{build_demo_app}}
           ports:
-            - 8000
-          expose:
-            - 8000
-    stage: "test"
+           - 8000:8000
+    composition_candidates:
+      test_service: 
+        image: ${{build_demo_app}}
+        links:
+          - app
+        command: bash -c '/usr/bin/wait-for-it.sh -t 20 app:8000 -- curl http://localhost:8000/health'
