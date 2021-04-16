@@ -36,7 +36,8 @@ steps:
     title: "Unit Test - Demo Rust App"
     stage: test
     image: "${{build_demo_app_test}}"
-    command: 'ls -l'
+    commands: 
+      - ls -l
   integration_test:
     type: composition
     stage: test
