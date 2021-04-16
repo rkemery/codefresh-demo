@@ -2,6 +2,7 @@ version: "1.0"
 stages:
   - "clone"
   - "build"
+  - "test"
 steps:
   main_clone:
     title: "Cloning main repository..."
@@ -21,9 +22,7 @@ steps:
   test:
     title: "Running tests"
     type: "freestyle" 
-    image: '${{build_demo_app}}'
-    environment:
-      - CARGO_HOME=/codefresh/volume/cargo    
+    image: '${{build_demo_app}}' 
     commands:
       - "cargo test"
     stage: "test"
