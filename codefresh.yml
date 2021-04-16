@@ -26,4 +26,10 @@ steps:
     image: "rkemery/codefresh-demo:test"
     commands:
       - "curl http://localhost:8000/health"
+    services:
+      composition:
+        rust_service:
+          image: 'rkemery/codefresh-demo:test'
+          ports:
+            - 8000
     stage: "test"
