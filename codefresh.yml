@@ -37,7 +37,7 @@ steps:
     stage: test
     image: "${{build_demo_app_test}}"
     commands: 
-      - ls -l
+      - cat /tmp/result.txt
   integration_test:
     type: composition
     stage: test
