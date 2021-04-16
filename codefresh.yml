@@ -40,7 +40,7 @@ steps:
       # Codefresh will generate (if not found) secret and add it to the deployment so the Kubernetes master can pull it
       registry: dockerhub   
   slack_notify:
-    title: "Slack Notify"
+    title: "Slack"
     stage: "notify"
     type: slack-notifier
     arguments:
