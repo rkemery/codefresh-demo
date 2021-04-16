@@ -13,7 +13,7 @@ steps:
     revision: "${{CF_BRANCH}}"
     git: "github"
   build_demo_app:
-    title: "Building Demo Rust App"
+    title: "Building Docker Image - Demo Rust App"
     type: build
     stage: package
     image_name: rkemery/codefresh-demo
@@ -30,7 +30,7 @@ steps:
       - netstat -an
   integration_test:
     type: composition
-    title: "Launching Demo Rust App"
+    title: "Integration Test - Demo Rust App"
     description: "Temporary Test Environment"
     composition:
       version: '3'
@@ -46,20 +46,20 @@ steps:
         links:
           - app
         command: 'netstat -an'
-    deploy_to_k8s:
-      title: "Deploying to K8s Cluster"
-      type: deploy
-      stage: deploy
-      kind: kubernetes  
-      ## cluster name as the shown in account's integration page
-      cluster:  rkemery-gke-cluster-01@rkemery-k8s
-      # desired namespace
-      namespace: default
-      service: codefresh-demo
-      candidate:
-        # The image that will replace the original deployment image 
-        # The image that been build using Build step
-        image: rkemery/codefresh-demo:test
-        # The registry that the user's Kubernetes cluster can pull the image from
-        # Codefresh will generate (if not found) secret and add it to the deployment so the Kubernetes master can pull it
-        registry: dockerhub   
+  deploy_to_k8s:
+    title: "Deploy Demo Rust App to k8s"
+    type: deploy
+    stage: deploy
+    kind: kubernetes  
+    ## cluster name as the shown in account's integration page
+    cluster:  rkemery-gke-cluster-01@rkemery-k8s
+    # desired namespace
+    namespace: default
+    service: codefresh-demo
+    candidate:
+      # The image that will replace the original deployment image 
+      # The image that been build using Build step
+      image: rkemery/codefresh-demo:test
+      # The registry that the user's Kubernetes cluster can pull the image from
+      # Codefresh will generate (if not found) secret and add it to the deployment so the Kubernetes master can pull it
+      registry: dockerhub   
