@@ -15,6 +15,7 @@ steps:
     title: "Building Demo App"
     type: build
     image_name: rkemery/codefresh-demo
+    no_cache: true
     dockerfile: Dockerfile
     working_directory: '.'
     tag: 'test'
