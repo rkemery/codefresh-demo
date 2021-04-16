@@ -66,8 +66,7 @@ steps:
       registry: dockerhub   
     hooks: 
       on_finish:
-        sendSlack:
-          type: slack-message-sender
-          arguments:
-            WEBHOOK_URL: ${{SLACK_WEB_URL}}
-            MESSAGE: ${{SLACK_MESSAGE}}
+       exec:
+         image: tutum/curl
+         commands:
+           - curl -X POST --data-urlencode 'payload={"text":"Code Fresh Demo App Deployment to k8s Successful"}' ${SLACK_WEB_URL}
