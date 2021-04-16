@@ -36,6 +36,5 @@ USER $APP_USER
 WORKDIR ${APP}
 
 ADD start.sh /
-RUN chmod +x /start.sh
 
 CMD ["/start.sh"]
