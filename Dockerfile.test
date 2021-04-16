@@ -3,6 +3,7 @@ FROM ekidd/rust-musl-builder:stable as builder
 RUN USER=root cargo new --bin rust-docker-web
 WORKDIR ./rust-docker-web
 COPY Cargo.toml Cargo.toml
+COPY start.sh start.sh
 RUN cargo build --release
 RUN rm src/*.rs
 
@@ -35,4 +36,4 @@ RUN chown -R $APP_USER:$APP_USER ${APP}
 USER $APP_USER
 WORKDIR ${APP}
 
-CMD ["./rust-docker-web"]
+CMD ["/start.sh"]
