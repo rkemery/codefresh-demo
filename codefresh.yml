@@ -9,7 +9,7 @@ stages:
   - "test"
 
 steps:
-  main_clone:
+  codefresh_demo_main_clone:
     title: "Cloning repository"
     type: "git-clone"
     repo: "rkemery/codefresh-demo"
@@ -19,21 +19,16 @@ steps:
     git: "github"
     stage: "clone"
     
-  BuildMyImage:
+  codefresh_demo_build_app:
     title: Building My Docker image
     type: build
-    image_name: codefresh
+    image_name: codefresh-demo
     dockerfile: sample-app/codefresh.Dockerfile
+    working_directory: '.'
     tag: 1.0.1
     registry: dockerhub
 
-  print_pwd_files:
-    title: 'Listing files'
-    image: alpine:latest
-    commands:
-    - 'ls -l'
-
-  test:
+  codefresh_demo_test:
     title: "Running test"
     type: "freestyle" # Run any command
     image: "alpine:latest" # The image in which command will be executed

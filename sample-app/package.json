@@ -1,21 +1,12 @@
 {
-    "name": "docker_sample_app",
-    "version": "1.0.0",
-    "license": "Apache-2.0",
-    "repository": {
-      "type": "git",
-      "url": "git://github.com/gruntwork-io/sample-app-docker.git"
-    },
-    "main": "server.js",
+    "name": "hello-world-express",
+    "description": "Hello World test app",
+    "version": "0.0.1",
     "scripts": {
-      "start": "node server.js",
-      "test": "mocha --exit"
+      "start": "node app.js"
     },
+    "private": true,
     "dependencies": {
-      "express": "^4.16.4"
-    },
-    "devDependencies": {
-      "mocha": "^7.1.1",
-      "supertest": "^4.0.2"
+      "express": "3.x"
     }
   }

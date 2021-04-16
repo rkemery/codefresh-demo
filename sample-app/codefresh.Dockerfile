@@ -1,12 +1,13 @@
 FROM node:12
 
-# Create app directory
-# WORKDIR /usr/app
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-COPY package.json ./
+COPY package.json /usr/src/app/
+RUN npm install --silent
+COPY . /usr/src/app
+EXPOSE 3000
 
-RUN npm install
-COPY . .
+ENV PORT 3000
 
-EXPOSE 80
 CMD [ "npm", "start" ]
