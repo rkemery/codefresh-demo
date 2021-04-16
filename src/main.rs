@@ -1,7 +1,17 @@
-use std::process::Command;
+use warp::{Filter, Rejection, Reply};
 
-fn main() {
-    let mut user = String::from_utf8(Command::new("whoami").output().unwrap().stdout).unwrap();
-    user.pop();
-    println!("I've once more been updated, and now I run as the user {}!", user)
+type Result<T> = std::result::Result<T, Rejection>;
+
+#[tokio::main]
+async fn main() {
+    let health_route = warp::path!("health").and_then(health_handler);
+
+    let routes = health_route.with(warp::cors().allow_any_origin());
+
+    println!("Started server at localhost:8000");
+    warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
+}
+
+async fn health_handler() -> Result<impl Reply> {
+    Ok("OK")
 }
