@@ -22,41 +22,6 @@ steps:
     working_directory: '.'
     tag: "${{CF_BRANCH}}"
     registry: dockerhub
-  build_demo_app_test:
-    title: "Building Docker Image for Testing - Demo Rust App"
-    type: build
-    stage: package
-    image_name: rkemery/codefresh-demo
-    no_cache: false
-    dockerfile: Dockerfile.test
-    working_directory: '.'
-    tag: "test"
-    registry: dockerhub
-  unit_test:
-    title: "Unit Test - Demo Rust App"
-    stage: test
-    image: "${{build_demo_app_test}}"
-    commands: 
-      - cat /tmp/result.txt
-  integration_test:
-    type: composition
-    stage: test
-    title: "Integration Test - Demo Rust App"
-    description: "Temporary Test Environment"
-    composition:
-      version: '3'
-      services:
-        app:
-          image: "${{build_demo_app}}"
-          ports:
-           - 8000
-          command: 'netstat -an'
-    composition_candidates:
-      test_service: 
-        image: "${{build_demo_app}}"
-        links:
-          - app
-        command: 'netstat -an'
   deploy_to_k8s:
     title: "Deploy Demo Rust App to k8s"
     type: deploy
@@ -74,9 +39,9 @@ steps:
       # The registry that the user's Kubernetes cluster can pull the image from
       # Codefresh will generate (if not found) secret and add it to the deployment so the Kubernetes master can pull it
       registry: dockerhub   
-    hooks: 
-      on_finish:
-       exec:
-         image: tutum/curl
-         commands:
-           - curl -X POST --data-urlencode 'payload={"text":"Code Fresh Demo App Deployment to k8s Successful"}' ${SLACK_WEB_URL}
+    on_success:
+      sendSlack:
+        type: slack-message-sender
+        arguments:
+          WEBHOOK_URL: ${SLACK_WEB_URL}
+          MESSAGE: ${SLACK_MESSAGE}
