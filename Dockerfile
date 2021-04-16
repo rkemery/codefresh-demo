@@ -1,17 +1,18 @@
-ARG NODE_VERSION
-FROM node:$NODE_VERSION
+FROM node:latest
 
-ARG APP_DIR
+RUN apt-get update
 
-RUN mkdir -p $APP_DIR
+RUN apt-get install -y netcat
+RUN apt-get install -y dnsutils
 
-WORKDIR $APP_DIR
+RUN npm install -g bower grunt-cli gulp mocha
 
-COPY package*.json .
-RUN npm install --silent
-COPY . .
-EXPOSE 3000
+# copy app and install deps
+COPY . /src
+RUN cd /src && npm install
 
-ENV PORT 3000
+EXPOSE 9000
 
-CMD [ "npm", "start" ]
+ENV MONGO_PORT 27017
+
+CMD [ "node", "/src/server.js" ]
