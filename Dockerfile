@@ -5,7 +5,6 @@
 FROM rust:1.39 as cargo-build
 
 WORKDIR /usr/src/app
-COPY Cargo.lock .
 COPY Cargo.toml .
 RUN mkdir .cargo
 RUN cargo vendor > .cargo/config
