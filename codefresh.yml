@@ -16,9 +16,9 @@ steps:
     title: "Building Node.Js Docker Image"
     type: build
     image_name: rkemery/codefresh-demo
-    dockerfile: sample-app/codefresh.Dockerfile
+    dockerfile: Dockerfile
     working_directory: '.'
-    tag: 'master'
+    tag: 'test'
     registry: dockerhub
     build_arguments:
       - NODE_VERSION=12
