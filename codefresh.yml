@@ -69,4 +69,4 @@ steps:
        exec:
          image: tutum/curl
          commands:
-           - curl -X POST --data-urlencode 'payload={"text":"Code Fresh Demo App Deployment to k8s Successful"}' https://hooks.slack.com/services/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
+           - curl -X POST --data-urlencode 'payload={"text":"Code Fresh Demo App Deployment to k8s Successful"}' https://hooks.slack.com/services/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
