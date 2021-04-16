@@ -1,13 +1,14 @@
-var express = require('express');
-var app = express();
+var http = require('http');
 
-// Routes
-app.get('/', function(req, res) {
-  res.send('Hello World!');
+this.server = http.createServer(function (req, res) {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Hello, world!\n');
 });
 
-// Listen
-var port = process.env.PORT || 3000;
-app.listen(port);
-console.log('Listening on localhost:'+ port);
-exports.app = app;
+exports.listen = function () {
+  this.server.listen.apply(this.server, arguments);
+};
+
+exports.close = function (callback) {
+  this.server.close(callback);
+};
