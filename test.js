@@ -1,12 +1,10 @@
-request = require("request");
-should = require("should");
+const request = require("supertest")("http://127.0.0.1:3000");
+const expect = require("chai").expect;
 
-describe('Applications API', function() {
-  it('Checks existence of test application', function(done) {
-    request.get('http://127.0.0.1:3000', function(err, response, body) {
-      response.statusCode.should.equal(200);
-      body.should.include("Hello World");
-      done();
-    })
+describe("GET /", function () {
+  it("returns status OK", async function () {
+    const response = await request.get("/");
+
+    expect(response.status).to.eql(200);
   });
 });
