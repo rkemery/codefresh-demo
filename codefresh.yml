@@ -27,10 +27,16 @@ steps:
     tag: 1.0.1
     registry: dockerhub
 
+  print_pwd_files:
+    title: 'Listing files'
+    image: alpine:latest
+    commands:
+    - 'ls -l'
+
   test:
     title: "Running test"
     type: "freestyle" # Run any command
-    image: "ubuntu:latest" # The image in which command will be executed
+    image: "alpine:latest" # The image in which command will be executed
     working_directory: "${{clone}}" # Running command where code cloned
     commands:
       - "ls"
