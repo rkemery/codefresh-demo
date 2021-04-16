@@ -1,26 +1,25 @@
-# 1: Build the binary
-FROM rust:1.42 as builder
-WORKDIR /usr/src
+# -----------------
+# Cargo Build Stage
+# -----------------
 
-# 1a: Prepare for static linking
-RUN apt-get update && \
-    apt-get dist-upgrade -y && \
-    apt-get install -y musl-tools && \
-    rustup target add x86_64-unknown-linux-musl
+FROM rust:1.39 as cargo-build
 
-# 1b: Download and compile Rust dependencies (and store as a separate Docker layer)
-RUN USER=root cargo new myprogram
-WORKDIR /usr/src/myprogram
-COPY Cargo.toml Cargo.lock ./
-RUN cargo install --target x86_64-unknown-linux-musl --path .
+WORKDIR /usr/src/app
+COPY Cargo.lock .
+COPY Cargo.toml .
+RUN mkdir .cargo
+RUN cargo vendor > .cargo/config
 
-# 1c: Build the binary using the actual source code
-COPY src ./src
-RUN cargo install --target x86_64-unknown-linux-musl --path .
+COPY ./src src
+RUN cargo build --release
+RUN cargo install --path . --verbose
 
-# 2: Copy the binary and extra files ("static") to an empty Docker image
-FROM scratch
-COPY --from=builder /usr/local/cargo/bin/myprogram .
-COPY static .
-USER 1000
-CMD ["./myprogram"]
+# -----------------
+# Final Stage
+# -----------------
+
+FROM debian:stable-slim
+
+COPY --from=cargo-build /usr/local/cargo/bin/my_binary /bin
+
+CMD ["my_binary"]
