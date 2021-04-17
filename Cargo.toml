@@ -11,7 +11,7 @@ tokio = { version = "0.2", features = ["macros", "rt-threaded"] }
 warp = "0.2"
 wiremock = "0.5"
 surf = "*"
-async-std = "*"
+async-std = { version = "1", features = ["attributes"] }
 
 [profile.release]
 panic = 'abort'

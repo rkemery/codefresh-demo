@@ -14,6 +14,11 @@ steps:
     repo: "rkemery/codefresh-demo"
     revision: "${{CF_BRANCH}}"
     git: "github"
+    when:
+      condition:
+        all:
+            noSkipCiInCommitMessage: |
+                includes(lower("${{CF_COMMIT_MESSAGE}}"), "run") == true
   build_demo_app_test:
     title: "Build for Unit Test"
     type: build
