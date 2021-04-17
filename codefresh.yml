@@ -15,7 +15,7 @@ steps:
     revision: "${{CF_BRANCH}}"
     git: "github"
   build_demo_app_test:
-    title: "Building Docker Image - Demo Rust App for Unit Testing"
+    title: "Build for Unit Test"
     type: build
     stage: test
     image_name: rkemery/codefresh-demo
