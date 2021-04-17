@@ -21,7 +21,7 @@ steps:
     title: "Building Demo App"
     type: "freestyle" 
     image: "rust:1.44-stretch" 
-    working_directory: "${{clone}}" 
+    working_directory: "." 
     environment:
       - CARGO_HOME=/codefresh/volume/cargo
     commands:
@@ -31,7 +31,7 @@ steps:
     title: "Running Unit Test"
     type: "freestyle" 
     image: "rust:1.44-stretch" 
-    working_directory: "${{clone}}" 
+    working_directory: "." 
     environment:
       - CARGO_HOME=/codefresh/volume/cargo    
     commands:
