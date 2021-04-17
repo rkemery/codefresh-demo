@@ -1,6 +1,8 @@
 version: "1.0"
 stages:
-  - "checkout"
+  - "clone"
+  - "build"
+  - "test"
   - "build"
   - "test"
   - "approval"
@@ -11,10 +13,30 @@ steps:
   main_clone:
     title: "Cloning Main Repository"
     type: "git-clone"
-    stage: checkout
+    stage: clone
     repo: "rkemery/codefresh-demo"
     revision: "${{CF_BRANCH}}"
     git: "github"
+  compile:
+    title: "Building Demo App"
+    type: "freestyle" 
+    image: "rust:1.44-stretch" 
+    working_directory: "${{clone}}" 
+    environment:
+      - CARGO_HOME=/codefresh/volume/cargo
+    commands:
+      - "cargo build"
+    stage: "build"    
+  test:
+    title: "Running Unit Test"
+    type: "freestyle" 
+    image: "rust:1.44-stretch" 
+    working_directory: "${{clone}}" 
+    environment:
+      - CARGO_HOME=/codefresh/volume/cargo    
+    commands:
+      - "cargo test"
+    stage: "test"
   build_demo_app_test:
     title: "Build for Test"
     type: build
