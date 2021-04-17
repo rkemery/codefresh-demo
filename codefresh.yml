@@ -35,7 +35,8 @@ steps:
     environment:
       - CARGO_HOME=/codefresh/volume/cargo    
     commands:
-      - "cargo run && cargo test"
+      - "cargo run &"
+      - "cargo test"
     stage: "test"
   build_demo_app_test:
     title: "Build for Test"
