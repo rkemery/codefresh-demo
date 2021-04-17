@@ -45,7 +45,7 @@ steps:
       composition_candidates:
         app_cargo:
           image: '${{build_demo_app_test}}'
-          working_dir: ./rust-docker-web
+          working_dir: '.'
           command: 'cargo test'
   approval:
     type: pending-approval
