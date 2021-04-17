@@ -1,6 +1,7 @@
 version: "1.0"
 stages:
   - "checkout"
+  - "build"
   - "test"
   - "approval"
   - "package"
@@ -9,15 +10,15 @@ stages:
 steps:
   main_clone:
     title: "Cloning Main Repository"
-    stage: checkout
     type: "git-clone"
+    stage: checkout
     repo: "rkemery/codefresh-demo"
     revision: "${{CF_BRANCH}}"
     git: "github"
   build_demo_app_test:
     title: "Build for Unit Test"
     type: build
-    stage: test
+    stage: build
     image_name: rkemery/codefresh-demo
     no_cache: false
     dockerfile: Dockerfile.test
@@ -29,6 +30,19 @@ steps:
         all:
             noSkipCiInCommitMessage: |
                 includes(lower("${{CF_COMMIT_MESSAGE}}"), "--skip-ci") == false
+  demo_app_integration_test:
+    title: "Integration Test"
+    type: test
+    stage: test
+    image: '${{build_demo_app_test}}'
+    commands:
+      - 'cargo test'
+    services:
+      composition:
+        app:
+          image: '${{build_demo_app_test}}'
+          ports:
+            - 8000 
   approval:
     type: pending-approval
     stage: approval
