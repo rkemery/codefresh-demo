@@ -1,31 +1,32 @@
-pub fn good() -> Result<()> {
-    use error_chain::error_chain;
+use wiremock::{MockServer, Mock, ResponseTemplate};
+use wiremock::matchers::{method, path};
 
-    error_chain! {
-        foreign_links {
-            Io(std::io::Error);
-            HttpRequest(reqwest::Error);
-        }
-    }
+#[async_std::main]
+async fn main() {
+    // Start a background HTTP server on a random local port
+    let mock_server = MockServer::start().await;
 
-    #[tokio::main]
-    async fn main() -> Result<()> {
-        let res = reqwest::get("http://localhost:8000/health").await?;
-        println!("Status: {}", res.status());
-        println!("Headers:\n{:#?}", res.headers());
+    // Arrange the behaviour of the MockServer adding a Mock:
+    // when it receives a GET request on '/hello' it will respond with a 200.
+    Mock::given(method("GET"))
+        .and(path("/health"))
+        .respond_with(ResponseTemplate::new(200))
+        // Mounting the mock on the mock server - it's now effective!
+        .mount(&mock_server)
+        .await;
+    
+    // If we probe the MockServer using any HTTP client it behaves as expected.
+    let status = surf::get(format!("{}/health", &mock_server.uri()))
+        .await
+        .unwrap()
+        .status();
+    assert_eq!(status.as_u16(), 200);
 
-        let body = res.text().await?;
-        println!("Body:\n{}", body);
-        Ok(())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn success() {
-        assert_eq!(good(Ok);
-    }
+    // If the request doesn't match any `Mock` mounted on our `MockServer` 
+    // a 404 is returned.
+    let status = surf::get(format!("{}/health", &mock_server.uri()))
+        .await
+        .unwrap()
+        .status();
+    assert_eq!(status.as_u16(), 404);
 }

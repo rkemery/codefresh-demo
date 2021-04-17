@@ -2,6 +2,7 @@ version: "1.0"
 stages:
   - "checkout"
   - "test"
+  - "approval"
   - "package"
   - "deploy"
   - "notify"
@@ -23,6 +24,17 @@ steps:
     working_directory: '.'
     tag: "test"
     registry: dockerhub
+  approval:
+    type: pending-approval
+    stage: approval
+    title: "Approval from Unit Test"
+    description: "Manual Approval Step"
+    timeout:
+      duration: 2
+      finalState: approved
+    when:
+      branch:
+        only: [ main ]
   build_demo_app:
     title: "Building Docker Image - Demo Rust App"
     type: build
