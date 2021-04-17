@@ -35,9 +35,6 @@ steps:
     stage: test
     image: '${{build_demo_app_test}}'
     commands:
-      - 'curl https://sh.rustup.rs -sSf | sh -s -- -y'
-      - 'source $HOME/.cargo/env'
-      - 'cargo test'
       - 'curl http://app:8000/health'
     services:
       composition:
@@ -45,6 +42,11 @@ steps:
           image: '${{build_demo_app_test}}'
           ports:
             - 8000 
+      composition_candidates:
+        app_cargo:
+          image: '${{build_demo_app_test}}'
+          working_dir: ./rust-docker-web
+          command: 'cargo test'
   approval:
     type: pending-approval
     stage: approval
