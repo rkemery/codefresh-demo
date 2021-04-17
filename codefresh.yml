@@ -25,7 +25,7 @@ steps:
     tag: "test"
     registry: dockerhub
   approval:
-    type: approval
+    type: pending-approval
     stage: approval
     title: "Approval from Unit Test"
     description: "Manual Approval Step"
