@@ -113,5 +113,10 @@ steps:
     stage: "notify"
     type: slack-notifier
     arguments:
+      MODE: "template"
+      SLACK_ATTACHMENTS: "${{SLACK_ATTACHMENTS}}"
+      SLACK_TEMPLATE_ACTIONS: "${{SLACK_TEMPLATE_ACTIONS}}"
+      SLACK_TEMPLATE_BODY: "${{SLACK_TEMPLATE_BODY}}"
+      SLACK_TEMPLATE_FIELDS: "${{SLACK_TEMPLATE_FIELDS}}"
       SLACK_HOOK_URL: "${{SLACK_WEB_URL}}"
       SLACK_TEXT: "${{SLACK_MESSAGE}}"
