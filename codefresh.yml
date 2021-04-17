@@ -22,6 +22,16 @@ steps:
     working_directory: '.'
     tag: "${{CF_BRANCH}}"
     registry: dockerhub
+  build_demo_app_test:
+    title: "Building Docker Image - Demo Rust App for Testing"
+    type: build
+    stage: package
+    image_name: rkemery/codefresh-demo
+    no_cache: true
+    dockerfile: Dockerfile.test
+    working_directory: '.'
+    tag: "test"
+    registry: dockerhub
   deploy_to_k8s:
     title: "Deploy Demo Rust App to k8s"
     type: deploy
