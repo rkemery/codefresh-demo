@@ -12,6 +12,10 @@ warp = "0.2"
 wiremock = "0.5"
 surf = "*"
 async-std = { version = "1", features = ["attributes"] }
+iron = "*"
+router = "*"
+hyper = "*"
+rustc-serialize = "*"
 
 [profile.release]
 panic = 'abort'
