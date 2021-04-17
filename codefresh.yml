@@ -18,17 +18,17 @@ steps:
     revision: "${{CF_BRANCH}}"
     git: "github"
   compile:
-    title: "Building Demo App"
+    title: "Build Demo App"
     type: "freestyle" 
+    stage: "build"   
     image: "rust:latest" 
     working_directory: "." 
     environment:
       - CARGO_HOME=/codefresh/volume/cargo
     commands:
-      - "cargo build"
-    stage: "build"    
+      - "cargo build" 
   test:
-    title: "Running Unit Test"
+    title: "Run Unit Test"
     type: "freestyle" 
     image: "rust:latest" 
     working_directory: "." 
@@ -39,7 +39,7 @@ steps:
       - "cargo test"
     stage: "test"
   build_demo_app_test:
-    title: "Build for Test"
+    title: "Build Docker Image for Test"
     type: build
     stage: build
     image_name: rkemery/codefresh-demo
@@ -54,7 +54,7 @@ steps:
             noSkipCiInCommitMessage: |
                 includes(lower("${{CF_COMMIT_MESSAGE}}"), "--skip-ci") == false
   demo_app_integration_test:
-    title: "Integration Test"
+    title: "Integration Test with Docker Image"
     stage: test
     image: '${{build_demo_app_test}}'
     commands:
