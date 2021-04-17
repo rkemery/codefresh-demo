@@ -20,7 +20,7 @@ steps:
   compile:
     title: "Building Demo App"
     type: "freestyle" 
-    image: "rust:1.44-stretch" 
+    image: "rust:1.31-stretch" 
     working_directory: "." 
     environment:
       - CARGO_HOME=/codefresh/volume/cargo
@@ -30,7 +30,7 @@ steps:
   test:
     title: "Running Unit Test"
     type: "freestyle" 
-    image: "rust:1.44-stretch" 
+    image: "rust:1.31-stretch" 
     working_directory: "." 
     environment:
       - CARGO_HOME=/codefresh/volume/cargo    
