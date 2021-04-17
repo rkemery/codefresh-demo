@@ -32,7 +32,6 @@ steps:
                 includes(lower("${{CF_COMMIT_MESSAGE}}"), "--skip-ci") == false
   demo_app_integration_test:
     title: "Integration Test"
-    type: test
     stage: test
     image: '${{build_demo_app_test}}'
     commands:
