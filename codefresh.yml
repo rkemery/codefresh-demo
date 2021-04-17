@@ -35,6 +35,8 @@ steps:
     stage: test
     image: '${{build_demo_app_test}}'
     commands:
+      - 'curl https://sh.rustup.rs -sSf | sh'
+      - 'cargo test'
       - 'curl http://app:8000/health'
     services:
       composition:
@@ -54,7 +56,7 @@ steps:
       branch:
         only: [ main ]
   build_demo_app:
-    title: "Building Docker Image - Demo Rust App"
+    title: "Build Demo Rust App"
     type: build
     stage: package
     image_name: rkemery/codefresh-demo
