@@ -35,7 +35,7 @@ steps:
     stage: test
     image: '${{build_demo_app_test}}'
     commands:
-      - 'curl http://localhost:8000/health'
+      - 'curl http://app:8000/health'
     services:
       composition:
         app:
