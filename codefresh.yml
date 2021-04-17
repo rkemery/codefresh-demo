@@ -16,7 +16,7 @@ steps:
     revision: "${{CF_BRANCH}}"
     git: "github"
   build_demo_app_test:
-    title: "Build for Unit Test"
+    title: "Build for Test"
     type: build
     stage: build
     image_name: rkemery/codefresh-demo
@@ -35,7 +35,7 @@ steps:
     stage: test
     image: '${{build_demo_app_test}}'
     commands:
-      - 'cargo test'
+      - 'curl http://localhost:8000/health'
     services:
       composition:
         app:
@@ -45,8 +45,8 @@ steps:
   approval:
     type: pending-approval
     stage: approval
-    title: "Approval from Unit Test"
-    description: "Manual Approval Step"
+    title: "Approval from Test"
+    description: "Approval Step"
     timeout:
       duration: 2
       finalState: approved
