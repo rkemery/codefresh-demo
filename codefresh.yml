@@ -2,8 +2,8 @@ version: "1.0"
 stages:
   - "clone"
   - "build"
-  - "test"
   - "build"
+  - "test"
   - "test"
   - "approval"
   - "package"
@@ -27,6 +27,21 @@ steps:
       - CARGO_HOME=/codefresh/volume/cargo
     commands:
       - "cargo build" 
+  build_demo_app_test:
+    title: "Build Docker Image for Test"
+    type: build
+    stage: build
+    image_name: rkemery/codefresh-demo
+    no_cache: false
+    dockerfile: Dockerfile.test
+    working_directory: '.'
+    tag: "test"
+    registry: dockerhub
+    when:
+      condition:
+        all:
+            noSkipCiInCommitMessage: |
+                includes(lower("${{CF_COMMIT_MESSAGE}}"), "--skip-ci") == false
   test:
     title: "Run Unit Test"
     type: "freestyle"
@@ -43,23 +58,8 @@ steps:
           image: '${{build_demo_app_test}}'
           ports:
             - 8000 
-  build_demo_app_test:
-    title: "Build Docker Image for Test"
-    type: build
-    stage: build
-    image_name: rkemery/codefresh-demo
-    no_cache: false
-    dockerfile: Dockerfile.test
-    working_directory: '.'
-    tag: "test"
-    registry: dockerhub
-    when:
-      condition:
-        all:
-            noSkipCiInCommitMessage: |
-                includes(lower("${{CF_COMMIT_MESSAGE}}"), "--skip-ci") == false
   demo_app_integration_test:
-    title: "Integration Test with Docker Image"
+    title: "Integration Test with Docker"
     stage: test
     image: '${{build_demo_app_test}}'
     commands:
@@ -70,11 +70,6 @@ steps:
           image: '${{build_demo_app_test}}'
           ports:
             - 8000 
-      composition_candidates:
-        app_cargo:
-          image: '${{build_demo_app_test}}'
-          working_dir: '.'
-          command: 'cargo test'
   approval:
     type: pending-approval
     stage: approval
