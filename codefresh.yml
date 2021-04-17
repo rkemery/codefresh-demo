@@ -35,7 +35,7 @@ steps:
     stage: test
     image: '${{build_demo_app_test}}'
     commands:
-      - 'curl https://sh.rustup.rs -sSf | sh'
+      - 'curl https://sh.rustup.rs -sSf | sh -s -- -y'
       - 'cargo test'
       - 'curl http://app:8000/health'
     services:
