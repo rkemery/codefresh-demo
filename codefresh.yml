@@ -19,13 +19,13 @@ steps:
     type: build
     stage: test
     image_name: rkemery/codefresh-demo
-    no_cache: true
+    no_cache: false
     dockerfile: Dockerfile.test
     working_directory: '.'
     tag: "test"
     registry: dockerhub
   approval:
-    type: pending-approval
+    type: approval
     stage: approval
     title: "Approval from Unit Test"
     description: "Manual Approval Step"
