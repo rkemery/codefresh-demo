@@ -29,15 +29,20 @@ steps:
       - "cargo build" 
   test:
     title: "Run Unit Test"
-    type: "freestyle" 
+    type: "freestyle"
+    stage: "test"
     image: "rust:latest" 
     working_directory: "." 
     environment:
       - CARGO_HOME=/codefresh/volume/cargo    
     commands:
-      - "cargo run &"
       - "cargo test"
-    stage: "test"
+    services:
+      composition:
+        app:
+          image: '${{build_demo_app_test}}'
+          ports:
+            - 8000 
   build_demo_app_test:
     title: "Build Docker Image for Test"
     type: build
