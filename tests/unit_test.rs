@@ -6,7 +6,7 @@ use hyper::*;
 fn get_backend() {
     let client = Client::new();
 
-    let res = client.get("http://localhost:8000/health").send().unwrap();
+    let res = client.get("http://app:8000/health").send().unwrap();
 
     assert_eq!(res.status, hyper::Ok);
 }
