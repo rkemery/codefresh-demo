@@ -14,7 +14,7 @@ surf = "*"
 async-std = { version = "1", features = ["attributes"] }
 iron = "*"
 router = "*"
-hyper = "*"
+hyper = { version = "0.10.12" }
 rustc-serialize = "*"
 
 [profile.release]
