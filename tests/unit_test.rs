@@ -1,32 +1,23 @@
-use wiremock::{MockServer, Mock, ResponseTemplate};
-use wiremock::matchers::{method, path};
+use httptest::{Server, Expectation, matchers::*, responders::*};
+// Start a server running on a local ephemeral port.
+let server = Server::run();
+// Configure the server to expect a single GET /health request and respond
+// with a 200 status code.
+server.expect(
+    Expectation::matching(request::method_path("GET", "/health"))
+    .respond_with(status_code(200)),
+);
 
-#[async_std::main]
-async fn main() {
-    // Start a background HTTP server on a random local port
-    let mock_server = MockServer::start().await;
+// The server provides server.addr() that returns the address of the
+// locally running server, or more conveniently provides a server.url() method
+// that gives a fully formed http url to the provided path.
+let url = server.url("/health");
+let client = hyper::Client::new();
+// Issue the GET /foo to the server.
+let resp = client.get(url).await.unwrap();
 
-    // Arrange the behaviour of the MockServer adding a Mock:
-    // when it receives a GET request on '/hello' it will respond with a 200.
-    Mock::given(method("GET"))
-        .and(path("/health"))
-        .respond_with(ResponseTemplate::new(200))
-        // Mounting the mock on the mock server - it's now effective!
-        .mount(&mock_server)
-        .await;
-    
-    // If we probe the MockServer using any HTTP client it behaves as expected.
-    let status = surf::get(format!("{}/health", &mock_server.uri()))
-        .await
-        .unwrap()
-        .status();
-    assert_eq!(status.as_u16(), 200);
+// assert the response has a 200 status code.
+assert!(resp.status().is_success());
 
-    // If the request doesn't match any `Mock` mounted on our `MockServer` 
-    // a 404 is returned.
-    let status = surf::get(format!("{}/health", &mock_server.uri()))
-        .await
-        .unwrap()
-        .status();
-    assert_eq!(status.as_u16(), 404);
-}
+// on Drop the server will assert all expectations have been met and will
+// panic if not.
