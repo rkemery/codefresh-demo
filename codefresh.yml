@@ -48,7 +48,6 @@ steps:
     steps:
       unit_test:
         title: "Run Unit Test"
-        type: "test"
         image: "rust:latest"
         working_directory: "."
         environment:
@@ -63,7 +62,6 @@ steps:
                 - 8000 
       demo_app_integration_test:
         title: "Integration Test with Docker"
-        type: "test"
         image: "${{build_demo_app_test}}"
         commands:
           - "curl http://app:8000/health"
