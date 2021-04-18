@@ -21,7 +21,7 @@ steps:
     steps:
       compile:
         title: "Build Demo App"
-        type: "build" 
+        type: "freestyle" 
         image: "rust:latest"
         working_directory: "."
         environment:
@@ -87,7 +87,7 @@ steps:
   build_demo_app:
     title: "Build Demo Rust App"
     type: "build"
-    stage: "package"
+    stage: "build"
     image_name: "rkemery/codefresh-demo"
     no_cache: false
     dockerfile: "Dockerfile"
