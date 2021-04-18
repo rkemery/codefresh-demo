@@ -115,6 +115,7 @@ steps:
   clone_terraform_repo:
     title: "Clone Terraform Repo"
     type: "git-clone"
+    working_directory: './codefresh-demo-terraform'
     stage: "clone"
     repo: "rkemery/codefresh-demo-terraform"
     revision: "${{CF_BRANCH}}"
