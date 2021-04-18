@@ -130,7 +130,7 @@ steps:
       - cf_export GOOGLE_CLOUD_KEYFILE_JSON=/codefresh/volume/account.json
   deploy_with_terraform:
     image: hashicorp/terraform:0.15.0
-    title: "Terraform Helm Vault"
+    title: "Terraform Deploy"
     working_directory: './codefresh-demo-terraform'
     stage: deploy
     commands:
