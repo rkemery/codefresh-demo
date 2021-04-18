@@ -1,80 +1,83 @@
 version: "1.0"
 stages:
-  - "clone"
-  - "build"
-  - "build"
-  - "test"
-  - "test"
-  - "approval"
-  - "package"
-  - "deploy"
-  - "notify"
+  - clone
+  - build
+  - test
+  - approval
+  - build
+  - deploy
+  - notify
 steps:
   main_clone:
-    title: "Cloning Main Repository"
-    type: "git-clone"
-    stage: clone
-    repo: "rkemery/codefresh-demo"
-    revision: "${{CF_BRANCH}}"
-    git: "github"
-  compile:
-    title: "Build Demo App"
-    type: "freestyle" 
-    stage: "build"   
-    image: "rust:latest" 
-    working_directory: "." 
-    environment:
-      - CARGO_HOME=/codefresh/volume/cargo
-    commands:
-      - "cargo build" 
-  build_demo_app_test:
-    title: "Build Docker Image for Test"
-    type: build
-    stage: build
-    image_name: rkemery/codefresh-demo
-    no_cache: false
-    dockerfile: Dockerfile.test
-    working_directory: '.'
-    tag: "test"
-    registry: dockerhub
-    when:
-      condition:
-        all:
-            noSkipCiInCommitMessage: |
-                includes(lower("${{CF_COMMIT_MESSAGE}}"), "--skip-ci") == false
-  test:
-    title: "Run Unit Test"
-    type: "freestyle"
-    stage: "test"
-    image: "rust:latest" 
-    working_directory: "." 
-    environment:
-      - CARGO_HOME=/codefresh/volume/cargo    
-    commands:
-      - "cargo test"
-    services:
-      composition:
-        app:
-          image: '${{build_demo_app_test}}'
-          ports:
-            - 8000 
-  demo_app_integration_test:
-    title: "Integration Test with Docker"
-    stage: test
-    image: '${{build_demo_app_test}}'
-    commands:
-      - 'curl http://app:8000/health'
-    services:
-      composition:
-        app:
-          image: '${{build_demo_app_test}}'
-          ports:
-            - 8000 
+    title: 'Cloning Main Repository'
+    type: git-clone
+    stage: 'clone'
+    repo: rkemery/codefresh-demo
+    revision: '${{CF_BRANCH}}'
+    git: github
+  parallel_builds:
+    type: parallel
+    stage: 'build'
+    steps:
+      compile:
+        title: 'Build Demo App'
+        type: build 
+        image: rust:latest
+        working_directory: '.'
+        environment:
+          - CARGO_HOME=/codefresh/volume/cargo
+        commands:
+          - 'cargo build'
+      build_demo_app_test:
+        title: 'Build Docker Image for Test'
+        type: build
+        image_name: rkemery/codefresh-demo
+        no_cache: false
+        dockerfile: Dockerfile.test
+        working_directory: '.'
+        tag: 'test'
+        registry: dockerhub
+        when:
+          condition:
+            all:
+                noSkipCiInCommitMessage: |
+                    includes(lower("${{CF_COMMIT_MESSAGE}}"), "--skip-ci") == false
+  parrallel_tests:
+    type: parallel
+    stage: 'test'
+    steps:
+      test:
+        title: 'Run Unit Test'
+        type: test
+        image: rust:latest
+        working_directory: '.'
+        environment:
+          - CARGO_HOME=/codefresh/volume/cargo    
+        commands:
+          - 'cargo test'
+        services:
+          composition:
+            app:
+              image: '${{build_demo_app_test}}'
+              ports:
+                - 8000 
+      demo_app_integration_test:
+        title: "Integration Test with Docker"
+        type: test
+        image: '${{build_demo_app_test}}'
+        commands:
+          - 'curl http://app:8000/health'
+        services:
+          composition:
+            app:
+              image: '${{build_demo_app_test}}'
+              ports:
+                - 8000 
   approval:
     type: pending-approval
-    stage: approval
-    title: "Approval from Test"
-    description: "Approval Step"
+    stage: 'approval'
+    title: 'Approval from Test'
+    description: 'Approval Step'
     timeout:
       duration: 2
       finalState: approved
@@ -82,19 +85,19 @@ steps:
       branch:
         only: [ main ]
   build_demo_app:
-    title: "Build Demo Rust App"
+    title: 'Build Demo Rust App'
     type: build
-    stage: package
+    stage: 'package'
     image_name: rkemery/codefresh-demo
     no_cache: false
     dockerfile: Dockerfile
     working_directory: '.'
-    tag: "${{CF_BRANCH}}"
+    tag: '${{CF_BRANCH}}'
     registry: dockerhub
   deploy_to_k8s:
-    title: "Deploy Demo Rust App to k8s"
+    title: 'Deploy Demo Rust App to k8s'
     type: deploy
-    stage: deploy
+    stage: 'deploy'
     kind: kubernetes  
     ## cluster name as the shown in account's integration page
     cluster:  rkemery-gke-cluster-01@rkemery-k8s
@@ -109,14 +112,9 @@ steps:
       # Codefresh will generate (if not found) secret and add it to the deployment so the Kubernetes master can pull it
       registry: dockerhub   
   slack_notify:
-    title: "Slack"
-    stage: "notify"
+    title: Slack
+    stage: 'notify'
     type: slack-notifier
     arguments:
-      MODE: "template"
-      SLACK_ATTACHMENTS: "${{SLACK_ATTACHMENTS}}"
-      SLACK_TEMPLATE_ACTIONS: "${{SLACK_TEMPLATE_ACTIONS}}"
-      SLACK_TEMPLATE_BODY: "${{SLACK_TEMPLATE_BODY}}"
-      SLACK_TEMPLATE_FIELDS: "${{SLACK_TEMPLATE_FIELDS}}"
-      SLACK_HOOK_URL: "${{SLACK_WEB_URL}}"
-      SLACK_TEXT: "${{SLACK_MESSAGE}}"
+      SLACK_HOOK_URL: '${{SLACK_WEB_URL}}'
+      SLACK_TEXT: '${{SLACK_MESSAGE}}'
