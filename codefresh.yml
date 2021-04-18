@@ -46,7 +46,7 @@ steps:
     type: "parallel"
     stage: "test"
     steps:
-      test:
+      unit_test:
         title: "Run Unit Test"
         type: "test"
         image: "rust:latest"
