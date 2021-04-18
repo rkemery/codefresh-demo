@@ -128,6 +128,7 @@ steps:
     commands:
       - echo $ACCOUNT_JSON_CONTENT > /codefresh/volume/account.json
       - cf_export GOOGLE_CLOUD_KEYFILE_JSON=/codefresh/volume/account.json
+      - cf_export GOOGLE_APPLICATION_CREDENTIALS=/codefresh/volume/account.json
   deploy_with_terraform:
     image: hashicorp/terraform:0.15.0
     title: "Terraform Deploy"
