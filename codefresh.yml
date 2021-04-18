@@ -51,6 +51,7 @@ steps:
         type: "test"
         image: "rust:latest"
         working_directory: "."
+        environment:
           - CARGO_HOME=/codefresh/volume/cargo    
         commands:
           - "cargo test"
