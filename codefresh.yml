@@ -6,10 +6,13 @@ stages:
   - "approval"
   - "build"
   - "deploy"
+  - "clone"
+  - "prepare"
+  - "deploy"
   - "notify"
 steps:
   main_clone:
-    title: "Cloning Main Repository"
+    title: "Clone Main Repository"
     type: "git-clone"
     stage: "clone"
     repo: "rkemery/codefresh-demo"
@@ -29,7 +32,7 @@ steps:
         commands:
           - "cargo build"
       build_demo_app_test:
-        title: "Build Docker Image for Test"
+        title: "Build Docker Image"
         type: "build"
         image_name: "rkemery/codefresh-demo"
         no_cache: false
@@ -61,7 +64,7 @@ steps:
               ports:
                 - 8000 
       demo_app_integration_test:
-        title: "Integration Test with Docker"
+        title: "Run Integration Test"
         image: "${{build_demo_app_test}}"
         commands:
           - "curl http://app:8000/health"
@@ -74,7 +77,7 @@ steps:
   approval:
     type: "pending-approval"
     stage: "approval"
-    title: "Approval from Test"
+    title: "Approval"
     description: "Approval Step"
     timeout:
       duration: 2
@@ -83,7 +86,7 @@ steps:
       branch:
         only: [ main ]
   build_demo_app:
-    title: "Build Demo Rust App"
+    title: "Final Build"
     type: "build"
     stage: "build"
     image_name: "rkemery/codefresh-demo"
@@ -93,7 +96,7 @@ steps:
     tag: "${{CF_BRANCH}}"
     registry: "dockerhub"
   deploy_to_k8s:
-    title: "Deploy Demo Rust App to k8s"
+    title: "Deploy App"
     type: "deploy"
     stage: "deploy"
     kind: "kubernetes" 
@@ -108,9 +111,30 @@ steps:
       image: "rkemery/codefresh-demo:${{CF_BRANCH}}"
       # The registry that the user's Kubernetes cluster can pull the image from
       # Codefresh will generate (if not found) secret and add it to the deployment so the Kubernetes master can pull it
-      registry: "dockerhub"   
+      registry: "dockerhub"
+  clone_terraform_repo:
+    title: "Clone Terraform Repo"
+    type: "git-clone"
+    stage: "clone"
+    repo: "rkemery/codefresh-demo-terraform"
+    revision: "${{CF_BRANCH}}"
+    git: "github"
+  setup_google_auth:
+    image: alpine:3.9
+    title: "Setting up Google Cloud Auth"
+    stage: prepare
+    commands:
+      - echo $ACCOUNT_JSON_CONTENT > /codefresh/volume/account.json
+      - cf_export GOOGLE_CLOUD_KEYFILE_JSON=/codefresh/volume/account.json
+  deploy_with_terraform:
+    image: hashicorp/terraform:0.15.0
+    title: "Deploying Terraform Plan"
+    stage: deploy
+    commands:
+      - terraform init
+      - terraform apply -auto-approve   
   slack_notify:
-    title: "Slack"
+    title: "Notify"
     stage: "notify"
     type: "slack-notifier"
     arguments:
