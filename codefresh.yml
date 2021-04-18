@@ -122,13 +122,15 @@ steps:
   setup_google_auth:
     image: alpine:3.9
     title: "Setting up Google Cloud Auth"
+    working_directory: './codefresh-demo-terraform'
     stage: prepare
     commands:
       - echo $ACCOUNT_JSON_CONTENT > /codefresh/volume/account.json
       - cf_export GOOGLE_CLOUD_KEYFILE_JSON=/codefresh/volume/account.json
   deploy_with_terraform:
     image: hashicorp/terraform:0.15.0
-    title: "Deploying Terraform Plan"
+    title: "Deploy Terraform - Helm/Vault/k8s"
+    working_directory: './codefresh-demo-terraform'
     stage: deploy
     commands:
       - terraform init
