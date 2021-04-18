@@ -137,8 +137,8 @@ steps:
     commands:
       - ls -l
       - cd codefresh-demo-terraform
-      - terraform init -force-copy -lock=false
-      - terraform apply -auto-approve -lock=false
+      - terraform init -force-copy
+      - terraform apply -auto-approve
   slack_notify:
     title: "Notify"
     stage: "notify"
