@@ -135,6 +135,7 @@ steps:
     stage: deploy
     commands:
       - ls -l
+      - cd codefresh-demo-terraform
       - terraform init
       - terraform apply -auto-approve   
   slack_notify:
